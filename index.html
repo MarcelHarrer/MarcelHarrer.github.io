@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mathematician & AI Researcher</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            color: white;
+            overflow: hidden;
+            background: linear-gradient(135deg, #1e1e2f, #3b3b5e);
+            height: 100vh;
+            perspective: 1000px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        #cube-container {
+            position: absolute;
+            top: 70%; /* Adjusted to position it below the button */
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        #background-cube {
+            width: 200px;
+            height: 200px;
+            transform-style: preserve-3d;
+            transform: rotateX(25deg) rotateY(25deg);
+        }
+
+        .face {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .face:nth-child(1) { transform: rotateY(0deg) translateZ(100px); }
+        .face:nth-child(2) { transform: rotateY(90deg) translateZ(100px); }
+        .face:nth-child(3) { transform: rotateY(180deg) translateZ(100px); }
+        .face:nth-child(4) { transform: rotateY(-90deg) translateZ(100px); }
+        .face:nth-child(5) { transform: rotateX(90deg) translateZ(100px); }
+        .face:nth-child(6) { transform: rotateX(-90deg) translateZ(100px); }
+
+        .content {
+            position: absolute;
+            top: 10%;
+            text-align: center;
+            padding: 20px;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
+
+        p {
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .cta {
+            margin-top: 20px;
+        }
+
+        .cta a {
+            text-decoration: none;
+            font-size: 1rem;
+            color: white;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 10px 20px;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+
+        .cta a:hover {
+            background: rgba(255, 255, 255, 0.4);
+        }
+
+        .cta .cv-btn {
+            margin-left: 20px;
+            background: rgba(0, 255, 255, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        <h1>Marcel Harrer</h1>
+        <p>Mathematician | AI Researcher | Innovator</p>
+        <div class="cta">
+            <a href="#">Explore My Work</a>
+            <!-- Use target="_blank" to open the PDF in a new tab -->
+            <a href="https://drive.google.com/file/d/13dzDeMY1WCJw9xE3yHFtTDiLzA11odS-/view?usp=sharing" target="_blank" class="cv-btn">View CV</a>
+        </div>
+    </div>
+
+    <div id="cube-container">
+        <div id="background-cube">
+            <div class="face"></div>
+            <div class="face"></div>
+            <div class="face"></div>
+            <div class="face"></div>
+            <div class="face"></div>
+            <div class="face"></div>
+        </div>
+    </div>
+
+    <script>
+        const cube = document.getElementById('background-cube');
+        let rotationX = 25;  // Initial X rotation angle
+        let rotationY = 25;  // Initial Y rotation angle
+
+        // Rotation speed variables
+        const rotationSpeedX = 0.1;
+        const rotationSpeedY = 0.1;
+
+        function rotateCube() {
+            // Update rotation angles
+            rotationX += rotationSpeedX;
+            rotationY += rotationSpeedY;
+
+            // Apply rotation to the cube
+            cube.style.transform = `rotateX(${rotationX}deg) rotateY(${rotationY}deg)`;
+
+            // Call the rotateCube function on the next frame
+            requestAnimationFrame(rotateCube);
+        }
+
+        // Start the auto-rotation when the page loads
+        rotateCube();
+    </script>
+</body>
+</html>
