@@ -44,7 +44,7 @@ function App() {
           <p className="hero-subtitle">Mathematician. AI Researcher. Problem Solver.</p>
           <div className="hero-cta">
             <a
-              href="https://drive.google.com/file/d/13dzDeMY1WCJw9xE3yHFtTDiLzA11odS-/view?usp=sharing"
+              href="https://drive.google.com/file/d/1I31Hsx53Jy21qD8ZLql9QzyorGNz9II6/view?usp=drive_link"
               target="_blank"
               rel="noopener noreferrer"
               className="btn-primary"
