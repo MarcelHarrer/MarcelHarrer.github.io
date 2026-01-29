@@ -3,7 +3,6 @@ import './App.css'
 
 function App() {
   const heroRef = useRef(null)
-  const aboutRef = useRef(null)
   const workRef = useRef(null)
 
   useEffect(() => {
@@ -32,7 +31,6 @@ function App() {
         <div className="nav-content">
           <span className="nav-logo">MH</span>
           <div className="nav-links">
-            <a href="#about">About</a>
             <a href="#work">Work</a>
             <a href="https://github.com/MarcelHarrer" target="_blank" rel="noopener noreferrer">GitHub</a>
           </div>
@@ -54,36 +52,6 @@ function App() {
               View CV
             </a>
             <a href="#work" className="btn-secondary">See my work</a>
-          </div>
-        </div>
-      </section>
-
-      {/* About Section */}
-      <section className="about" id="about" ref={aboutRef}>
-        <div className="section-content">
-          <div className="about-grid fade-in">
-            <div className="about-text">
-              <h2 className="section-title">Building intelligent systems<br />with mathematical precision.</h2>
-              <p className="about-description">
-                I combine deep mathematical foundations with cutting-edge AI research
-                to create solutions that matter. From legal AI assistants to full-stack
-                applications, I focus on building tools that are both powerful and practical.
-              </p>
-            </div>
-            <div className="about-stats">
-              <div className="stat">
-                <span className="stat-number">AI</span>
-                <span className="stat-label">Research & Development</span>
-              </div>
-              <div className="stat">
-                <span className="stat-number">Math</span>
-                <span className="stat-label">Theoretical Foundation</span>
-              </div>
-              <div className="stat">
-                <span className="stat-number">Code</span>
-                <span className="stat-label">Full-Stack Development</span>
-              </div>
-            </div>
           </div>
         </div>
       </section>
