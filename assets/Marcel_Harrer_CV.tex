@@ -1,0 +1,151 @@
+% Marcel Harrer - Curriculum Vitae
+% Compile with any standard TeX engine, e.g.:
+%   tectonic Marcel_Harrer_CV.tex
+%   latexmk -pdf Marcel_Harrer_CV.tex
+%   pdflatex Marcel_Harrer_CV.tex
+% Portable: uses only common packages, default Computer Modern font.
+
+\documentclass[a4paper,10pt]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[left=1.7cm,right=1.7cm,top=1.4cm,bottom=1.2cm]{geometry}
+\usepackage{xcolor}
+\usepackage{titlesec}
+\usepackage{enumitem}
+\usepackage{microtype}
+\usepackage[hidelinks]{hyperref}
+
+\definecolor{cvblue}{HTML}{2B6CB0}
+\hypersetup{colorlinks=true, urlcolor=cvblue, linkcolor=cvblue}
+
+% ---- section headers: blue, bold, with a full-width rule underneath ----
+\titleformat{\section}
+  {\color{cvblue}\large\bfseries}{}{0em}{}[{\color{cvblue}\titlerule[0.8pt]}]
+\titlespacing*{\section}{0pt}{11pt}{5pt}
+
+% ---- tight bullet lists ----
+\setlist[itemize]{leftmargin=1.35em, itemsep=1.5pt, topsep=2pt, parsep=0pt,
+                  label=\textbullet}
+
+\setlength{\parindent}{0pt}
+\pagestyle{empty}
+
+% ---- helper: title on the left, meta (location/date) bold on the right ----
+\newcommand{\role}[2]{\textbf{#1}\hfill\textbf{#2}\par}
+% ---- helper: education entry (institution / what / when) ----
+\newcommand{\edu}[3]{\textbf{#1}\par #2\hfill #3\par\vspace{3pt}}
+
+\begin{document}
+
+% ============================ Header ============================
+\begin{center}
+  {\color{cvblue}\huge\bfseries Marcel Harrer, M.Sc.}\\[5pt]
+  {\normalsize +43\,660\,630\,2084 (WhatsApp)}\\[2pt]
+  {\normalsize \href{mailto:harrer.marcel@gmail.com}{harrer.marcel@gmail.com}
+   \quad\textcolor{gray}{|}\quad
+   \href{https://github.com/MarcelHarrer}{github.com/MarcelHarrer}}
+\end{center}
+\vspace{4pt}
+{\color{cvblue}\rule{\linewidth}{1pt}}
+\vspace{2pt}
+
+% ======================= Professional Summary =======================
+\section{Professional Summary}
+
+AI Engineer with 3+ years of experience building production-grade machine learning
+systems across computer vision, NLP, time series forecasting, and agent-based
+architectures. Strong background in applied mathematics (M.Sc.) with hands-on
+experience in Retrieval-Augmented Generation (RAG), intelligent agents, and scalable
+data pipelines. Proven ability to translate research into reliable, real-world AI solutions.
+
+% ============================ Education ============================
+\section{Education}
+\edu{University of Vienna}{M.Sc. in Applied Mathematics}{Oct 2020 -- Nov 2023}
+\edu{University of Vienna}{B.Sc. in Mathematics}{Oct 2016 -- Sep 2020}
+\edu{HTL M\"{o}dling}{Technical High School}{Oct 2011 -- Jun 2016}
+
+% ============================ Experience ============================
+\section{Experience}
+
+\role{Fivesquare --- AI Engineer}{Remote \textbar{} 2026 -- Present}
+\begin{itemize}
+  \item Building production AI products and infrastructure with the Fivesquare team.
+  \item Working across LLM-based systems and agent architectures in Python.
+\end{itemize}
+\vspace{5pt}
+
+\role{Independent AI Engineer --- Freelance}{Remote \textbar{} Mar 2025 -- 2026}
+\begin{itemize}
+  \item Designed and deployed intelligent agent systems using LangGraph, including a
+        Text-to-SQL agent enabling natural language access to PostgreSQL databases.
+  \item Built modular tool interfaces supporting structured reasoning, database querying,
+        and automated email workflows.
+  \item Optimized agent orchestration, prompt strategies, and multi-step reasoning
+        pipelines for reliability and accuracy.
+\end{itemize}
+\vspace{5pt}
+
+\role{ImageTwin --- AI Research Engineer}{Jan 2024 -- 2026}
+\begin{itemize}
+  \item Developed computer vision algorithms to detect image manipulation and integrity
+        violations in scientific figures.
+  \item Implemented keypoint-based image matching using OpenCV (SIFT, SURF) and trained
+        LightGlue models for robust visual correspondence.
+  \item Co-developed a deep learning pipeline for AI-generated image detection, covering
+        data annotation, preprocessing, and automated evaluation.
+  \item Contributed to dataset creation and experimental validation in a research-driven
+        production environment.
+\end{itemize}
+\vspace{5pt}
+
+\role{Financial Market Authority (FMA) --- AI Engineer}{Dec 2022 -- Dec 2023}
+\begin{itemize}
+  \item Designed and implemented a Retrieval-Augmented Generation (RAG) system for
+        answering domain-specific regulatory queries using FAISS and transformer-based
+        embeddings.
+  \item Enabled semantic search over large German-language document collections, improving
+        information retrieval accuracy and efficiency.
+  \item Applied SBERT-based similarity models for document clustering and regulatory text
+        analysis.
+  \item Produced analytical dashboards and visualizations in R to support data-driven
+        insights in the Austrian insurance sector.
+\end{itemize}
+
+% ============================ Projects ============================
+\section{Projects}
+
+\textbf{Master's Thesis -- Accelerating Gradient Descent via L-Smoothness}\par
+Developed an adaptive optimization algorithm leveraging L-smoothness to dynamically
+adjust step sizes in gradient descent. Demonstrated provable convergence guarantees and
+improved convergence speed compared to fixed-step methods.
+\vspace{5pt}
+
+\textbf{Agent Lawyer}\par
+Built a legal assistant system using Retrieval-Augmented Generation (RAG) to provide
+grounded, document-based answers to legal queries. Implemented semantic search with FAISS,
+transformer embeddings, and a reranking model to improve answer relevance. Runs locally on
+a compact LLaMA 3.2 model.\par
+GitHub: \href{https://github.com/MarcelHarrer/agent-lawyer-public}{github.com/MarcelHarrer/agent-lawyer-public}
+\vspace{5pt}
+
+\textbf{Skin Cancer Detection with CNNs}\par
+Trained convolutional neural networks on the HAM10000 dataset for skin lesion
+classification. Implemented preprocessing, data augmentation, and model evaluation
+pipelines, achieving performance comparable to expert-level benchmarks.
+
+% ============================ Technical Skills ============================
+\section{Technical Skills}
+\textbf{Languages:} Python, SQL, R, MATLAB\par\vspace{2pt}
+\textbf{ML / AI:} PyTorch, TensorFlow, Hugging Face Transformers, Computer Vision,
+Deep Learning, Time Series Forecasting, Retrieval-Augmented Generation (RAG),
+Intelligent Agents\par\vspace{2pt}
+\textbf{Backend \& MLOps:} FastAPI, Docker, CI/CD, FAISS\par\vspace{2pt}
+\textbf{Cloud \& AWS:} AWS SageMaker, AWS S3, AWS Lambda, AWS EC2, AWS Bedrock,
+AWS CloudWatch, AWS IAM\par\vspace{2pt}
+\textbf{Data \& Analytics:} Pandas, Power BI, SQL Databases\par\vspace{2pt}
+\textbf{Tools:} Git, LangChain, LangGraph, OpenCV\par\vspace{2pt}
+\textbf{Mathematics:} Optimization, Applied Mathematics, Data Science\par\vspace{2pt}
+\textbf{Languages (Spoken):} German (Native), English (Bilingual), Spanish (Advanced)
+
+\end{document}
