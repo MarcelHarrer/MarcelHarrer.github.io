@@ -6,10 +6,61 @@
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { background: #faf9f5; display: flex; align-items: center; justify-content: center; min-height: 100vh; font-family: -apple-system, BlinkMacSystemFont, sans-serif; }
-    #__bundler_loading { position: fixed; bottom: 20px; right: 20px; font: 13px/1.4 -apple-system, BlinkMacSystemFont, sans-serif; color: #666; background: #fff; padding: 8px 14px; border-radius: 8px; box-shadow: 0 1px 4px rgba(0,0,0,0.12); z-index: 10000; }
-    #__bundler_thumbnail { position: fixed; inset: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: #faf9f5; z-index: 9999; }
-    #__bundler_thumbnail svg { width: 100%; height: 100%; object-fit: contain; }
-    #__bundler_placeholder { color: #999; font-size: 14px; }
+    /* Loading overlay — a small serif monogram + hairline progress on the bare
+       cream field. Web-safe fonts only (EB Garamond loads from the bundle, i.e.
+       after this screen is gone). */
+    #__bundler_thumbnail {
+      position: fixed; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      background: #faf9f5;
+      z-index: 9999;
+    }
+    /* Small centered italic serif monogram */
+    .mh-mark {
+      font: italic 30px/1 Georgia, 'Times New Roman', serif;
+      letter-spacing: 0.08em;
+      padding-left: 0.08em;            /* offset trailing tracking so the italic mark sits optically centered */
+      color: #141414;
+      opacity: 0;
+      animation: mh-in 900ms ease-out forwards,
+                 mh-breathe 3400ms ease-in-out 900ms infinite;
+    }
+    /* Hairline progress rule — absolutely positioned so the monogram never reflows */
+    .mh-rule {
+      position: absolute;
+      top: calc(50% + 30px); left: 50%;
+      transform: translateX(-50%);
+      width: 72px; height: 1px;
+      background: #d8d4c8;
+      overflow: hidden;
+      opacity: 0;
+      animation: mh-in 900ms ease-out 160ms forwards;
+    }
+    .mh-fill {
+      display: block; width: 100%; height: 100%;
+      background: #bcb7a8;
+      transform: scaleX(0);
+      transform-origin: left center;
+      transition: transform 420ms cubic-bezier(.4, 0, .2, 1);
+    }
+    /* Quiet error slot — invisible while empty, fades in only on a real message */
+    .mh-msg {
+      position: absolute; left: 0; right: 0; top: calc(50% + 56px);
+      text-align: center; padding: 0 24px; max-width: 100%;
+      font: 12px/1.5 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      color: #6c6a64;
+      letter-spacing: 0.01em;
+      opacity: 0; transition: opacity 300ms ease;
+    }
+    .mh-msg:not(:empty) { opacity: 1; }
+    @keyframes mh-in      { to { opacity: 1; } }
+    @keyframes mh-breathe { 0%, 100% { opacity: 1; } 50% { opacity: .78; } }
+    @media (prefers-reduced-motion: reduce) {
+      .mh-mark { animation: none; opacity: .9; }
+      .mh-rule { animation: none; opacity: 1; }
+      .mh-fill { transition: none; }
+      .mh-msg  { transition: none; }
+    }
   </style>
   <noscript>
     <style>#__bundler_loading { display: none; }</style>
@@ -19,19 +70,25 @@
   </noscript>
 </head>
 <body>
-  <div id="__bundler_thumbnail">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-      <rect width="100" height="100" fill="#f6f4ef"></rect>
-      <text x="50" y="62" text-anchor="middle" font-family="Georgia, serif" font-style="italic" font-size="44" fill="#141414">MH</text>
-    </svg>
+  <div id="__bundler_thumbnail" role="status" aria-label="Loading">
+    <div class="mh-mark" aria-hidden="true">MH</div>
+    <div class="mh-rule" aria-hidden="true"><span class="mh-fill" id="__bundler_bar"></span></div>
+    <!-- Empty during a normal load (invisible via :empty); holds a quiet message only on failure. -->
+    <div id="__bundler_loading" class="mh-msg" aria-live="polite"></div>
   </div>
-  <div id="__bundler_loading">Unpacking...</div>
 
   <script>
     
 document.addEventListener('DOMContentLoaded', async function() {
   const loading = document.getElementById('__bundler_loading');
-  function setStatus(msg) { if (loading) loading.textContent = msg; }
+  const bar = document.getElementById('__bundler_bar');
+  let __total = 0, __done = 0;
+  function setProgress(f){ if (!bar) return; f = f < 0 ? 0 : (f > 1 ? 1 : f); bar.style.transform = 'scaleX(' + f + ')'; }
+  function setStatus(msg){
+    if (/^Unpacking/i.test(msg)) return;                     // swallow asset counts — the hairline communicates progress
+    if (/^Rendering/i.test(msg)) { setProgress(1); return; }  // fill hairline to 100% at hand-off; no text
+    if (loading) loading.textContent = msg;                  // errors only -> quiet centered caption (revealed by :not(:empty))
+  }
 
   // Error sink persists across replaceWith since it's on window, not the DOM.
   window.addEventListener('error', function(e) {
@@ -48,7 +105,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     const manifestEl = document.querySelector('script[type="__bundler/manifest"]');
     const templateEl = document.querySelector('script[type="__bundler/template"]');
     if (!manifestEl || !templateEl) {
-      setStatus('Error: missing bundle data');
+      setStatus("This page couldn't be loaded. Please refresh.");
       console.error('[bundler] Missing script tags — manifestEl:', !!manifestEl, 'templateEl:', !!templateEl);
       return;
     }
@@ -60,6 +117,8 @@ document.addEventListener('DOMContentLoaded', async function() {
     setStatus('Unpacking ' + uuids.length + ' assets...');
 
     const blobUrls = {};
+    __total = uuids.length;
+    setProgress(0.04);   // tiny initial nudge so the hairline visibly "begins" before the first asset settles
     await Promise.all(uuids.map(async (uuid) => {
       const entry = manifest[uuid];
       try {
@@ -96,6 +155,8 @@ document.addEventListener('DOMContentLoaded', async function() {
         console.error('Failed to decode asset ' + uuid + ':', err);
         blobUrls[uuid] = URL.createObjectURL(new Blob([], { type: entry.mime }));
       }
+      // Advance the hairline on both success and failure so it can never stall below 100%.
+      __done++; if (__total) setProgress(__done / __total);
     }));
 
     const extResEl = document.querySelector('script[type="__bundler/ext_resources"]');
@@ -133,6 +194,27 @@ document.addEventListener('DOMContentLoaded', async function() {
     // preserve ordering (React before ReactDOM before Babel before text/babel).
     const doc = new DOMParser().parseFromString(template, 'text/html');
     document.documentElement.replaceWith(doc.documentElement);
+
+    // Farewell overlay: the swap above destroyed the loader (and its <head> CSS),
+    // so lay a fresh, fully inline-styled cream clone bearing the same centered mark
+    // over the new document and crossfade it out once React has painted. Purely
+    // cosmetic — isolated so it can never block rendering, and self-removing via a
+    // backstop timer scheduled here at mount time.
+    var __fade = null, __killFade = function(){};
+    try {
+      __fade = document.createElement('div');
+      __fade.setAttribute('aria-hidden', 'true');
+      __fade.style.cssText = 'position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:#faf9f5;z-index:9999;pointer-events:none;opacity:1;transition:opacity 520ms ease;';
+      var __m = document.createElement('div');
+      __m.textContent = 'MH';
+      __m.style.cssText = "font:italic 30px/1 Georgia,'Times New Roman',serif;letter-spacing:.08em;padding-left:.08em;color:#141414;";
+      __fade.appendChild(__m);
+      (document.body || document.documentElement).appendChild(__fade);
+      var __killed = false;
+      __killFade = function(){ if (__killed) return; __killed = true; if (__fade && __fade.parentNode) __fade.parentNode.removeChild(__fade); };
+      setTimeout(__killFade, 1400);
+    } catch (e) { /* farewell is purely cosmetic — must never block render */ }
+
     const dead = Array.from(document.scripts);
     for (const old of dead) {
       const s = document.createElement('script');
@@ -156,8 +238,21 @@ document.addEventListener('DOMContentLoaded', async function() {
     if (window.Babel && typeof window.Babel.transformScriptTags === 'function') {
       window.Babel.transformScriptTags();
     }
+
+    // The real page is built — dissolve the farewell overlay over it. Wait two
+    // frames so at least one painted frame of the page sits underneath first.
+    try {
+      if (__fade) {
+        var __reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (__reduce) { __killFade(); }
+        else {
+          __fade.addEventListener('transitionend', __killFade, { once: true });
+          requestAnimationFrame(function(){ requestAnimationFrame(function(){ __fade.style.opacity = '0'; }); });
+        }
+      }
+    } catch (e) { /* fade is cosmetic — never block render */ }
   } catch (err) {
-    setStatus('Error unpacking: ' + err.message);
+    setStatus('Something went wrong loading this page. Please refresh.');
     console.error('Bundle unpack error:', err);
   }
 });
