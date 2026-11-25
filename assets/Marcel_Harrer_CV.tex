@@ -1,135 +1,74 @@
-% Marcel Harrer — CV (international / senior AI engineer, English)
-% Style: classic LaTeX look (Computer Modern), single column, ATS-safe.
 \documentclass[10pt,a4paper]{article}
-
-\usepackage[a4paper,top=0.9cm,bottom=0.9cm,left=1.5cm,right=1.5cm]{geometry}
-\usepackage[T1]{fontenc}
-\usepackage[utf8]{inputenc}
+% fontspec + ligatures off: ATS parsers read "staff", "workflows" etc. correctly
+\usepackage{fontspec}
+\setmainfont{lmroman10-regular.otf}[BoldFont=lmroman10-bold.otf,ItalicFont=lmroman10-italic.otf,BoldItalicFont=lmroman10-bolditalic.otf,Ligatures={TeX,NoCommon}]
+\usepackage[a4paper,left=0.62in,right=0.62in,top=0.5in,bottom=0.45in]{geometry}
 \usepackage{enumitem}
 \usepackage{titlesec}
-\usepackage[hidelinks]{hyperref}
-\usepackage{amsmath}
+\usepackage[hidelinks,pdftitle={Marcel Harrer - CV},pdfauthor={Marcel Harrer}]{hyperref}
+\usepackage{tabularx}
 
 \pagestyle{empty}
 \setlength{\parindent}{0pt}
+\setlength{\tabcolsep}{0pt}
+\linespread{1.0}
 
-% --- Section style: bold heading with a rule underneath (matches original) ---
-\titleformat{\section}{\large\bfseries}{}{0pt}{}[\vspace{1pt}\titlerule]
-\titlespacing*{\section}{0pt}{5pt}{2.5pt}
+\titleformat{\section}{\large\bfseries}{}{0em}{}[\vspace{-0.75em}\rule{\linewidth}{0.4pt}]
+\titlespacing*{\section}{0pt}{4pt}{1pt}
 
-% --- Helpers ---
-\newcommand{\sep}{\,$\cdot$\,}
-\newcommand{\role}[4]{% {Title}{Company}{Location}{Dates}
-  \vspace{2pt}%
-  {\textbf{#1}, #2 \hfill \textit{#3\ifx&#3&\else\sep\fi#4}}\par}
-\newlist{cvitems}{itemize}{1}
-\setlist[cvitems]{label=\textbullet, leftmargin=14pt, itemsep=0.5pt, parsep=0pt, topsep=1.5pt}
+\setlist[itemize]{leftmargin=1.1em,itemsep=0pt,topsep=1pt,parsep=0pt,partopsep=0pt,label=$\bullet$}
+
+\newcommand{\role}[3]{\par\vspace{3pt}\begin{tabularx}{\linewidth}{@{}X r@{}}\textbf{#1}, #2 & \textit{#3}\end{tabularx}\par}
+\newcommand{\edu}[3]{\begin{tabularx}{\linewidth}{@{}X r@{}}\textbf{#1}, #2 & \textit{#3}\end{tabularx}\par}
 
 \begin{document}
 
-% ================= HEADER =================
 \begin{center}
-  {\LARGE\bfseries Marcel Harrer}\\[3pt]
-  AI Engineer \sep LLM Systems, RAG \& Multi-Agent Architectures\\
-  Vienna, Austria \sep open to remote \sep +43\,660\,630\,2084 \sep
-  \href{mailto:harrer.marcel@gmail.com}{harrer.marcel@gmail.com}\\
-  \href{https://github.com/MarcelHarrer}{github.com/MarcelHarrer} \sep
-  \href{https://linkedin.com/in/marcel-harrer}{linkedin.com/in/marcel-harrer}
+{\LARGE\bfseries Marcel Harrer}\\[3pt]
+AI Engineer $\cdot$ Production LLM \& Multi-Agent Systems\\
+Vienna, Austria $\cdot$ EU citizen $\cdot$ open to remote (US/LATAM time-zone overlap) $\cdot$ \href{mailto:harrer.marcel@gmail.com}{harrer.marcel@gmail.com}\\
+\href{https://github.com/MarcelHarrer}{github.com/MarcelHarrer} $\cdot$ \href{https://linkedin.com/in/marcel-harrer}{linkedin.com/in/marcel-harrer}\\
+\textbf{Languages:} English (C2) $\cdot$ Spanish (C1) $\cdot$ German (native)
 \end{center}
+\vspace{-0.8em}
 
-% ================= SUMMARY =================
 \section{Summary}
-AI Engineer specializing in production LLM systems, RAG, and multi-agent
-architectures, with further depth in computer vision and NLP. Currently
-architecting agent systems that autonomously process $\sim$10 million
-government emails a year across 50 departments. M.Sc.\ in Applied Mathematics
---- pairs hands-on engineering with mathematical rigor, incl.\ research in
-preparation for publication.
+AI engineer with four years of applied AI, from computer-vision research and RAG search at Austria's financial regulator to production agent systems. At Fivesquare I architected and own a self-improving multi-agent system that routes about 10 million government emails a year with 90\% accuracy and has saved around 3,000 staff hours so far. M.Sc. in Applied Mathematics (honors).
 
-% ================= EXPERIENCE =================
 \section{Experience}
+\role{Senior AI Engineer}{Fivesquare}{Remote $\cdot$ Mar 2026 -- Present}\begin{itemize}
+\item Architected and own end to end a production multi-agent system that routes incoming email and scanned mail for 50 government departments to the right case file: around 10 million emails a year, 90\% accuracy against how staff filed the same emails, about 20\% fully auto-assigned, and around 3,000 staff hours saved so far.
+\item Self-improving by design: a nightly learner turns staff corrections into skills in a git-backed memory repository, a challenger agent runs beside the live one so changes prove themselves first, and every decision is traced in Langfuse. Uncertain cases go to a person.
+\item Built the retrieval layer (Qdrant with BGE-M3 dense + sparse vectors) and the benchmark that measures it, with leak-free train/validation/test splits.
+\item Built the confidence score that decides which emails are auto-assigned (decision-gate model, token log-probs, self-confidence), automatic subject area, case title and keywords, and vision OCR for scanned letters.
+\end{itemize}
+\role{AI Engineer (Freelance)}{Property management client}{Remote $\cdot$ Mar 2025 -- Dec 2025}\begin{itemize}
+\item Built a Text-to-SQL agent (LangGraph) that lets the client's non-technical staff pull data from PostgreSQL in plain English, removing their dependence on engineers for routine reports.
+\item Designed the modular tool interfaces the agent uses to query databases, reason over structured data, and trigger email workflows, so it handles multi-step requests end to end instead of one-off queries.
+\end{itemize}
+\role{AI Research Engineer}{ImageTwin}{Jan 2024 -- Dec 2025}{\small\textit{Part-time in 2025, concurrent with the freelance role above.}}\par\vspace{-1pt}\begin{itemize}
+\item Built computer-vision models that flag manipulated and duplicated images in scientific figures by matching them against a 100-million-image dataset; raised classification accuracy to 98\% (OpenCV SIFT/SURF, LightGlue).
+\item Co-built an end-to-end pipeline to detect AI-generated images, from labeling training data through automated evaluation.
+\end{itemize}
+\role{AI Engineer}{Financial Market Authority (FMA)}{Vienna, Austria $\cdot$ Dec 2022 -- Dec 2023}\begin{itemize}
+\item Built an AI search assistant (RAG with FAISS and transformer embeddings) that gave regulators instant, source-backed answers from thousands of German-language regulatory documents.
+\item Made large regulatory archives searchable by meaning rather than exact wording (SBERT similarity), so staff could surface relevant rules they would otherwise miss.
+\end{itemize}
 
-\role{AI Engineer}{Fivesquare}{Remote}{Apr 2026 -- Present}
-\begin{cvitems}
-  \item Shipped a multi-agent system that automatically handles $\sim$10 million
-        incoming government emails a year across 50 departments, replacing fully
-        manual processing.
-  \item Architected a shared orchestrator routing to a dedicated agent per
-        department, each learning new skills from production experience (agentic
-        context engineering) instead of requiring constant retraining.
-  \item Own production LLM and agent systems in Python end to end --- design,
-        deployment, and operation --- on the core AI team.
-\end{cvitems}
-
-\role{AI Engineer (Freelance)}{Independent}{Remote}{Mar 2025 -- Dec 2025}
-\begin{cvitems}
-  \item Delivered a Text-to-SQL agent (LangGraph) that lets non-technical staff
-        query PostgreSQL databases in plain English, removing their dependence on
-        engineers for routine reporting.
-  \item Designed the agent's modular tool interfaces --- database querying,
-        reasoning over structured data, and email workflows --- so it completes
-        multi-step requests end to end rather than one-off queries.
-  \item Tuned orchestration and prompt strategies for reliable, repeatable
-        production results --- not just a working demo.
-\end{cvitems}
-
-\role{AI Research Engineer}{ImageTwin}{}{Jan 2024 -- Dec 2025}
-{\footnotesize\itshape Part-time in 2025, concurrent with the freelance role above.}
-\begin{cvitems}
-  \item Built computer-vision models that flag manipulated and duplicated images
-        in scientific figures by matching them against a 100-million-image
-        dataset, catching integrity issues nearly impossible to spot by eye.
-  \item Implemented keypoint-based image matching (OpenCV SIFT/SURF) and trained
-        LightGlue models to reliably detect reused or altered image regions.
-  \item Co-built an end-to-end pipeline to detect AI-generated images --- from
-        labeling training data through automated evaluation --- as newer fakes
-        began slipping past existing checks.
-\end{cvitems}
-
-\role{AI Engineer}{Financial Market Authority (FMA)}{Vienna, Austria}{Dec 2022 -- Dec 2023}
-\begin{cvitems}
-  \item Built a RAG search assistant (FAISS + transformer embeddings) giving
-        regulators instant, source-backed answers from thousands of
-        German-language regulatory documents.
-  \item Made large regulatory archives searchable by meaning rather than exact
-        wording (SBERT similarity), surfacing relevant rules staff would otherwise
-        miss and clustering related texts to speed up review.
-  \item Built dashboards in R that turned complex Austrian insurance-sector data
-        into clear visuals for non-technical decision-makers.
-\end{cvitems}
-
-% ================= RESEARCH =================
-\section{Research \& Selected Projects}
-
-\textbf{B-Spline Networks and a Universal Approximation Theorem}
-\textit{(in preparation, with Prof.\ Arnold Neumaier)}\\
-Introduced ``spline networks'' (single-hidden-layer networks with adaptive cubic
-splines over random ridge directions) and proved a quantitative universal
-approximation theorem bounding the expected $L^2$ error by $O(1/m + h^8)$;
-training reduces to sparse linear least squares, solved with conjugate gradients in Python.
-
-\vspace{2pt}
-\textbf{Master's Thesis: Accelerating Gradient Descent via L-Smoothness}\\
-Adaptive optimizer that leverages L-smoothness to dynamically tune step sizes,
-with provable convergence guarantees and faster convergence than fixed-step methods.
-
-% ================= EDUCATION =================
-\section{Education}
-{\textbf{M.Sc.\ in Applied Mathematics}, University of Vienna \hfill \textit{Oct 2020 -- Nov 2023}}\\
-{\textbf{B.Sc.\ in Mathematics}, University of Vienna \hfill \textit{Oct 2016 -- Sep 2020}}
-
-% ================= SKILLS =================
 \section{Technical Skills}
-\textbf{Languages:} Python, SQL\\
-\textbf{LLMs \& Agents:} RAG, multi-agent orchestration, LangGraph, LangChain,
-MCP (Model Context Protocol), prompt engineering, Hugging Face Transformers,
-vLLM, Ollama, AWS Bedrock\\
-\textbf{ML \& Computer Vision:} PyTorch, TensorFlow, OpenCV (SIFT/SURF),
-LightGlue, time-series forecasting\\
-\textbf{Retrieval \& Data:} FAISS, Qdrant, pgvector, semantic search, PostgreSQL\\
-\textbf{MLOps \& Infrastructure:} FastAPI, Docker, Kubernetes, CI/CD,
-AWS (SageMaker, Lambda, S3, EC2), Weights \& Biases, Langfuse\\
-\textbf{Spoken Languages:} German (native), English (bilingual, C2),
-Spanish (advanced, C1)
+\textbf{Programming:} Python, SQL, R\\
+\textbf{LLMs \& Agents:} multi-agent orchestration, agentic workflows, tool calling, MCP (Model Context Protocol), LangGraph, LangChain, RAG, prompt engineering, AWS Bedrock, vLLM, Ollama, Hugging Face Transformers\\
+\textbf{Retrieval \& Data:} Qdrant (dense + sparse), BGE-M3, FAISS, pgvector, semantic search, PostgreSQL, MongoDB\\
+\textbf{MLOps \& Observability:} Langfuse, OpenTelemetry, RabbitMQ, Docker, Kubernetes, CI/CD, FastAPI, Weights \& Biases, AWS (SageMaker, Lambda, S3, EC2)\\
+\textbf{ML \& Computer Vision:} PyTorch, TensorFlow, OpenCV (SIFT/SURF), LightGlue, time-series forecasting
+
+\section{Education}
+\edu{M.Sc.\ in Applied Mathematics}{University of Vienna, passed with honors}{Oct 2020 -- Nov 2023}
+\edu{B.Sc.\ in Mathematics}{University of Vienna, passed with honors}{Oct 2016 -- Sep 2020}
+
+\section{Research \& Selected Projects}
+\textbf{B-Spline Networks and a Universal Approximation Theorem} \textit{(in preparation, with Prof.\ Arnold Neumaier)}: new network architecture with a proven quantitative approximation bound; training reduces to sparse least squares.\par\vspace{2pt}
+\textbf{Master's Thesis: Accelerating Gradient Descent via L-Smoothness}: adaptive step-size optimizer with provable convergence guarantees.
+
 
 \end{document}
